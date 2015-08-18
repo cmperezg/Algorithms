@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+
+  </head>
+  <body>
+    <div id = "s1">
+
+	</div>
+	<script type="text/javascript">
+	
+		function shuffleArray(array) {
+			for (var i = array.length - 1; i > 0; i--) {
+				var j = Math.floor(Math.random() * (i + 1));
+				var temp = array[i];
+				array[i] = array[j];
+				array[j] = temp;
+			}
+		}
+
+		function repaint(arr1,arr2,circles,stepno){
+		console.log("entra repaint");
+		console.log(arr1 + ' arr1');
+		console.log(arr2 + ' arr2');
+			for(var i=1;i<=arr1.length;i++){
+				if(arr1.indexOf(i)==arr2.indexOf(i)){
+					continue;
+				}else{
+					circ = d3.select("#circ"+i);
+					circ.transition().duration(1000)
+					.attr("cx",arr2.indexOf(i)*30+30);
+				}
+			}
+			line = d3.select("#line");
+			line.transition().duration(1000)
+			.attr("x1",15+(stepno*30))
+			.attr("x2",15+(stepno*30))
+		}
+		repaint.immediate = 1;
+		
+		function bubbleSort(arr,circles){
+			console.log(arr.length);
+			stepno = 1;
+			var swapped = false;
+			do{
+			swapped = false;
+				var i = 1;
+				var clearId = setInterval(function(){
+				oldarr = arr.slice();
+					if(arr[i] < arr[i-1]){
+						var arri = arr[i];
+						arr[i] = arr[i-1];
+						arr[i-1] = arri;
+						swapped=true;
+						repaint(oldarr,arr,circles,stepno);
+					}
+					i++;
+					if(arr.length == i){
+					if (swapped == true){
+						i = 1;
+					}else{
+					clearInterval(clearId);
+					}
+					
+					}
+				}, 1200);
+			}while(swapped == true);
+			
+
+       }
+
+		circlePositions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+		purpleScale = ["#FAB9FD","#EDABF0","#E09EE4","#D491D8","#C784CC","#BB76BF",
+			"#AE69B3","#A25CA7","#954F9B","#88428F","#7C3482","#6F2776","#631A6A","#560D5E","#4A0052"];
+		
+		shuffleArray(circlePositions);
+		
+		selectDivS1 = d3.select("#s1")
+		.append("svg:svg")
+		.attr("width", circlePositions.length*50)
+		.attr("height", 200);
+		
+		selectDivS1
+		.append("line")
+		.attr("x1",15)
+		.attr("y1",10)
+		.attr("x2",15)
+		.attr("y2",50)
+		.attr("id","line")
+		.attr("stroke","gray")
+		.attr("stroke-width",2);
+
+		select = selectDivS1.selectAll("circle")
+			.data(circlePositions)
+			.enter()
+			.append("circle")
+			.attr("cx", function(d){return circlePositions.indexOf(d)*30+30})
+			.attr("cy", 30)
+			.attr("r", 12)
+			.attr("id",function(d){return "circ" + d})
+			.style("fill", function(d){return purpleScale[d-1]});
+
+			
+		
+		
+		bubbleSort(circlePositions,select);
+
+	</script>
+  </body>
+</html>
+
