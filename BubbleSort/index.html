@@ -35,7 +35,7 @@
 			line = d3.select("#line");
 			line.transition().duration(1000)
 			.attr("x1",15+(stepno*30))
-			.attr("x2",15+(stepno*30))
+			.attr("x2",75+(stepno*30))
 		}
 		repaint.immediate = 1;
 		
@@ -54,11 +54,17 @@
 						arr[i-1] = arri;
 						swapped=true;
 						repaint(oldarr,arr,circles,stepno);
+						stepno++;
+					}else{
+						repaint(oldarr,arr,circles,stepno);
+						stepno++;
 					}
+
 					i++;
 					if(arr.length == i){
 					if (swapped == true){
 						i = 1;
+						stepno=1;
 					}else{
 					clearInterval(clearId);
 					}
@@ -84,9 +90,9 @@
 		selectDivS1
 		.append("line")
 		.attr("x1",15)
-		.attr("y1",10)
-		.attr("x2",15)
-		.attr("y2",50)
+		.attr("y1",47)
+		.attr("x2",75)
+		.attr("y2",47)
 		.attr("id","line")
 		.attr("stroke","gray")
 		.attr("stroke-width",2);
