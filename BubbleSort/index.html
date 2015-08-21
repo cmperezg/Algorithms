@@ -2,7 +2,7 @@
 <html>
   <head>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-
+	<script src="async.js" type="text/javascript"></script>
   </head>
   <body>
     <div id = "s1">
@@ -20,9 +20,7 @@
 		}
 
 		function repaint(arr1,arr2,circles,stepno){
-		console.log("entra repaint");
-		console.log(arr1 + ' arr1');
-		console.log(arr2 + ' arr2');
+			console.log("entraarepaint")
 			for(var i=1;i<=arr1.length;i++){
 				if(arr1.indexOf(i)==arr2.indexOf(i)){
 					continue;
@@ -40,14 +38,21 @@
 		repaint.immediate = 1;
 		
 		function bubbleSort(arr,circles){
-			console.log(arr.length);
+			var swapped = true;
+        async.whilst(
+        function() {return swapped == true ;},
+        function(outer_callback){
+
+
+            swapped = false;
+
 			stepno = 1;
-			var swapped = false;
-			do{
-			swapped = false;
-				var i = 1;
-				var clearId = setInterval(function(){
-				oldarr = arr.slice();
+			var i = 1;
+            async.whilst(
+                function () {return i < arr.length  },
+                function (callback) {
+
+					var oldarr = arr.slice();
 					if(arr[i] < arr[i-1]){
 						var arri = arr[i];
 						arr[i] = arr[i-1];
@@ -59,24 +64,35 @@
 						repaint(oldarr,arr,circles,stepno);
 						stepno++;
 					}
-
+					if(stepno == arr.length-1){
+					stepno = 0;
+					}
+					console.log(stepno);
+                    setTimeout(callback, 1200);
 					i++;
-					if(arr.length == i){
-					if (swapped == true){
-						i = 1;
-						stepno=1;
-					}else{
-					clearInterval(clearId);
-					}
-					
-					}
-				}, 1200);
-			}while(swapped == true);
+                },
+                function (err) {
+                    // 5 seconds have passed
+
+                    outer_callback(); // <--- here
+                }
+            );
+
+
+
+
+        },
+        function(err){
+
+        }
+        );
+		
 			
 
        }
 
-		circlePositions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+		//circlePositions = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15];
+		circlePositions = [1,2,3,4,5];
 		purpleScale = ["#FAB9FD","#EDABF0","#E09EE4","#D491D8","#C784CC","#BB76BF",
 			"#AE69B3","#A25CA7","#954F9B","#88428F","#7C3482","#6F2776","#631A6A","#560D5E","#4A0052"];
 		
